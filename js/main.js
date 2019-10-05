@@ -188,3 +188,152 @@ var adverts = createAdverts(ADVERT_NUM);
 
 renderCard(adverts[0]);
 renderPins(adverts);
+
+// /////////////////////////////////////////////////////////////////
+/* Обработка пользовательских взаимодействий*/
+// ////////////////////////////////////////////////////////////////
+
+// Активация страницы
+var mainPin = document.querySelector('.map__pin--main');
+var adForm = document.querySelector('.ad-form');
+var addressField = adForm.querySelector('#address');
+var adFormFieldset = adForm.querySelectorAll('fieldset');
+var filterForm = document.querySelector('.map__filters');
+var filterList = map.querySelectorAll('.map__filter, .map__checkbox');
+
+// Коды клавиш
+var KeyboardKey = {
+  ENTER: 'Enter',
+  ESC: 'Esc',
+  ESCAPE_IE: 'Escape'
+};
+
+// Параметры главной метки
+var MainPinSize = {
+  HEIGHT: 80,
+  RADIUS: 33
+};
+
+// Стили полей
+var Style = {
+  DISABLED: 'ad-form--disabled'
+};
+
+// Проверяет, нажата ли клавиша Enter
+var isEnterKey = function (evt) {
+  return evt.key === KeyboardKey.ENTER;
+};
+
+// Возвращает координаты главной метки
+var getMainPinCoords = function (height) {
+  return {
+    x: mainPin.offsetLeft + MainPinSize.RADIUS,
+    y: mainPin.offsetTop + height
+  };
+};
+
+// Форматирует строку с адресом
+var renderAddressInput = function (coords) {
+  addressField.value = coords.x + ', ' + coords.y;
+};
+
+// Переводит элемент в неактивное состояние
+var setDisabled = function (element) {
+  element.disabled = true;
+};
+
+// Снимает с элемента неактивное состояние
+var unsetDisabled = function (element) {
+  element.disabled = false;
+};
+
+// Генерирует функции переключения активности элементов
+var generateLocker = function (element, collection) {
+  return function (locked) {
+    collection.forEach(locked ? setDisabled : unsetDisabled);
+    element.classList[locked ? 'add' : 'remove'](Style.DISABLED);
+  };
+};
+
+var setAdFormLock = generateLocker(adForm, adFormFieldset);
+var setFiltersLock = generateLocker(filterForm, filterList);
+
+// Переводит страницу в неактивное состояние
+var deactivatePage = function () {
+  setAdFormLock(true);
+  setFiltersLock(true);
+  renderAddressInput(getMainPinCoords(MainPinSize.RADIUS));
+
+  mainPin.addEventListener('mousedown', onMainPinMouseDown);
+  mainPin.addEventListener('keydown', onMainPinEnterPress);
+};
+
+// Событие опускания клавиши мыши на главную метку
+var onMainPinMouseDown = function () {
+  activatePage();
+  mainPin.removeEventListener('mousedown', onMainPinMouseDown);
+  mainPin.removeEventListener('keydown', onMainPinEnterPress);
+};
+
+// Событие нажатия клавиши Enter на главную метку
+var onMainPinEnterPress = function (evt) {
+  if (isEnterKey(evt)) {
+    activatePage();
+    mainPin.removeEventListener('mousedown', onMainPinMouseDown);
+    mainPin.removeEventListener('keydown', onMainPinEnterPress);
+  }
+};
+
+// Переводит страницу в активное состояние
+var activatePage = function () {
+  setAdFormLock(false);
+  renderAddressInput(getMainPinCoords(MainPinSize.HEIGHT));
+  adForm.reset();
+  filterForm.reset();
+
+  map.classList.remove('map--faded');
+};
+
+// Блок валидации количества комнат и количества гостей
+var roomsToCapacity = {
+  1: [1],
+  2: [1, 2],
+  3: [1, 2, 3],
+  100: [0]
+};
+
+var roomNumber = document.querySelector('#room_number');
+var capacity = document.querySelector('#capacity');
+
+var hasCapacity = function (options) {
+  var selected = capacity[capacity.selectedIndex].value;
+  return options.indexOf(selected) > -1;
+};
+
+// Проверяет валидность введенных значений
+var checkValidity = function () {
+  var rooms = +roomNumber[roomNumber.selectedIndex].value;
+  var options = roomsToCapacity[rooms];
+  var message = hasCapacity(options) ? '' : getValidityString(rooms, options);
+
+  capacity.setCustomValidity(message);
+};
+
+// Формирует строку валидации
+var getValidityString = function (rooms, selectedCapacity) {
+  var max = Math.max.apply(null, selectedCapacity);
+
+  return max === 0
+    ? rooms + ' комнат не для гостей'
+    : 'Для ' + rooms + ' комнаты доступны только ' + max + ' места';
+};
+
+roomNumber.addEventListener('change', function () {
+  checkValidity();
+});
+
+capacity.addEventListener('change', function () {
+  checkValidity();
+});
+
+deactivatePage();
