@@ -84,7 +84,7 @@
 
   /**
    * Функция создания уведомления
-   * @param {HTMLElement} template - Template, на сонове гторого генерируется ошибка
+   * @param {HTMLElement} template - Template, на основе которого генерируется ошибка
    * @param {String} noticeMessage - Сообщение уведомления (необязательное значение)
    */
   var onNotice = function (template, noticeMessage) {
