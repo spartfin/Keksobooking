@@ -3,6 +3,7 @@
 (function () {
 
   var ACCOMMODATION_TYPES_MAP = {
+    'any': 'Любой тип жилья',
     'flat': 'Квартира',
     'bungalo': 'Бунгало',
     'house': 'Дом',

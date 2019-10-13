@@ -84,7 +84,7 @@
 
   /**
    * Функция создания уведомления
-   * @param {HTMLElement} template - Template, на основе которого генерируется ошибка
+   * @param {HTMLElement} template - Template, на сонове гторого генерируется ошибка
    * @param {String} noticeMessage - Сообщение уведомления (необязательное значение)
    */
   var onNotice = function (template, noticeMessage) {
@@ -115,11 +115,9 @@
       errorMessage.textContent = noticeMessage;
 
       errorButton.addEventListener('click', function () {
-        window.backend.load(function (data) {
-          window.map.activatePage();
-          window.map.showOffersPins(data);
-          document.removeEventListener('keydown', onEscPress);
-        }, window.util.functions.onError);
+        window.form.functions.deactivateForm();
+        mainElement.removeChild(noticeElement);
+        document.removeEventListener('keydown', onEscPress);
       });
     }
 

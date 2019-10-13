@@ -20,6 +20,7 @@
    */
   var showOffersPins = function (data) {
     var fragment = document.createDocumentFragment();
+
     for (var i = 0; i < data.length; i++) {
       var offer = window.pin.renderOffer(data[i]);
       fragment.appendChild(offer);
@@ -32,7 +33,10 @@
    * @description Отображение пинов объявлений на карте с использование данных с сервера
    */
   var offersPinsLoad = function () {
-    window.backend.load(showOffersPins, window.util.functions.onError);
+    window.backend.load(function (data) {
+      window.defaultData = data;
+      showOffersPins(window.filters.filterAll());
+    }, window.util.functions.onError);
   };
 
   /**
