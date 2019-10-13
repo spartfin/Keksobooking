@@ -69,7 +69,7 @@
   */
   var closeCard = function () {
     var pinPopup = document.querySelector('.map__card');
-    if (pinPopup !== null) {
+    if (pinPopup) {
       window.util.elems.mapElement.removeChild(pinPopup);
     }
   };
