@@ -10,8 +10,13 @@
   var adFormRoomsInput = window.util.elems.adForm.querySelector('#room_number');
   var adFormCapacityInput = window.util.elems.adForm.querySelector('#capacity');
   var adFormCapacityOptions = adFormCapacityInput.querySelectorAll('option');
+  var adFormAvatarInput = window.util.elems.adForm.querySelector('#avatar');
+  var adFormAvatarPreview = window.util.elems.adForm.querySelector('.ad-form-header__preview').querySelector('img');
+  var adFormImgInput = window.util.elems.adForm.querySelector('#images');
+  var adFormImgPreview = window.util.elems.adForm.querySelector('.ad-form__photo');
   var adFormAccommodationSelected = adFormAccommodationInput.querySelector('option[selected]');
   var adFormReset = window.util.elems.adForm.querySelector('.ad-form__reset');
+  var PREVIEW_IMG = 'img/muffin-grey.svg';
 
   /**
    * Передача координат острого конца метки в поле адреса (форма создания объявления)
@@ -34,7 +39,7 @@
   };
 
   /**
-   * Проверка соответствия количества мест количеству комнату
+   * @description Проверка соответствия количества мест количеству комнату
    */
   var checkRoomsAndCapacityValidity = function () {
     if (adFormRoomsInput.value === '100' && adFormCapacityInput.value !== '0') {
@@ -51,7 +56,7 @@
   };
 
   /**
-   * Проверка соответствия заголовка требованиям
+   * @description Проверка соответствия заголовка требованиям
    */
   var checkTitleValidity = function () {
     if (adFormTitleInput.validity.tooShort) {
@@ -66,7 +71,7 @@
   };
 
   /**
-   * Проверка соответствия заголовка требованиям
+   * @description Проверка соответствия заголовка требованиям
    */
   var checkPriceValidity = function () {
     if (adFormPriceInput.validity.rangeUnderflow) {
@@ -102,12 +107,33 @@
     adFormPriceInput.placeholder = window.data.maps.ACCOMMODATION_TYPE_TO_PRICE_MAP[adFormAccommodationInput.value];
   };
 
+  var resetPictures = function () {
+    adFormAvatarPreview.src = PREVIEW_IMG;
+    window.fileInput.removePicture(adFormImgPreview);
+  };
+
+  /**
+   * @description Событие добавления аватарки пользователя в форму объявления
+   */
+  adFormAvatarInput.addEventListener('change', function () {
+    window.fileInput.addPicture(adFormAvatarInput, true, adFormAvatarPreview);
+  });
+
+  /**
+   * @description Событие добавления изображения жилья в форму объявления
+   */
+  adFormImgInput.addEventListener('change', function () {
+    window.fileInput.addPicture(adFormImgInput, false, adFormImgPreview);
+  });
+
   /**
    * @description Очистить поля ввода у формы и установить изначальные значения min и placehplder поля цены
    */
   var resetForm = function () {
     window.util.elems.adForm.reset();
+    window.filters.resetFilters();
     setPriceMinValue();
+    resetPictures();
   };
 
   /**

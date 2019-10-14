@@ -65,6 +65,18 @@
   };
 
   /**
+  * Открытие карточки
+  * @param {Event} evt
+  */
+  var openCard = function (evt) {
+    var currentPin = evt.target.closest('.map__pin:not(.map__pin--main)');
+    if (currentPin) {
+      var params = currentPin.getAttribute('data-params');
+      showModalOffer(JSON.parse(params));
+    }
+  };
+
+  /**
   * @description Закртыие карточки
   */
   var closeCard = function () {
@@ -73,6 +85,23 @@
       window.util.elems.mapElement.removeChild(pinPopup);
     }
   };
+
+  /**
+   * @description Открытие попапа с информацией об объявлении при клике на пин (при помощи делегирования)
+   */
+  window.util.elems.mapPinsContainer.addEventListener('click', function (evt) {
+    closeCard();
+    openCard(evt);
+  });
+
+  /**
+   * @description Открытие попапа с информацией об объявлении при нажатии Enter с фокусом на пине (при помощи делегирования)
+   */
+  window.util.elems.mapPinsContainer.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === window.util.keycode.ENTER_KEYCODE) {
+      openCard(evt);
+    }
+  });
 
   /**
    * @description Зыкрытие попапа с информацией об объявлении при нажатии ECS

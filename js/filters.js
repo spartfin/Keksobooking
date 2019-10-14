@@ -18,8 +18,7 @@
   /**
   * @description Проверка для каждого элемента массива на основе значения фильтра типа жилья
   * @param {Object} item - Элемент массива (объект) для которого выполняется проверка
-  * @return {Boolean} - Автоматическое прохождение проверки
-  * @return {Boolean} - Прохождение проверки на соответствие типа жилья значению фильтра
+  * @return {Boolean} - Подходит ли типа жилья под фильтр
   */
   var getHousingType = function (item) {
     if (housingType.value === 'any') {
@@ -32,8 +31,7 @@
   /**
   * @description Проверка для каждого элемента массива на основе значения фильтра цены
   * @param {Object} item - Элемент массива (объект) для которого выполняется проверка
-  * @return {Boolean} - Автоматическое прохождение проверки
-  * @return {Boolean} - Прохождение проверки на соответствие цены значению фильтра
+  * @return {Boolean} - Подходит ли цена под фильтр
   */
   var getHousingPrice = function (item) {
     if (housingPrice.value === 'any') {
@@ -50,8 +48,7 @@
   /**
   * @description Проверка для каждого элемента массива на основе значения фильтра количества комнат
   * @param {Object} item - Элемент массива (объект) для которого выполняется проверка
-  * @return {Boolean} - Автоматическое прохождение проверки
-  * @return {Boolean} - Прохождение проверки на соответствие количества комнат значению фильтра
+  * @return {Boolean} - Подходит ли количество комнат под фильтр
   */
   var getHousingRooms = function (item) {
     if (housingRooms.value === 'any') {
@@ -64,8 +61,7 @@
   /**
   * @description Проверка для каждого элемента массива на основе значения фильтра количества гостей
   * @param {Object} item - Элемент массива (объект) для которого выполняется проверка
-  * @return {Boolean} - Автоматическое прохождение проверки
-  * @return {Boolean} - Прохождение проверки на соответствие количества гостей значению фильтра
+  * @return {Boolean} - Подходит ли количество гостей под фильтр
   */
   var getHousingGuests = function (item) {
     if (housingGuests.value === 'any') {
@@ -82,8 +78,7 @@
   * @description Проверка для каждого элемента массива на основе значения одного из фильров удобств
   * @param {Object} item - Элемент массива (объект) для которого выполняется проверка
   * @param {HTMLElement} feature - Фильтр для, которого выполняется проверка
-  * @return {Boolean} - Автоматическое прохождение проверки
-  * @return {Boolean} - Прохождение проверки на соответствие наличия удобства значению фильтра
+  * @return {Boolean} - Подходит ли удобства под фильтр
   */
   var getHousingFeatures = function (item, feature) {
     if (feature.checked === false) {
@@ -126,13 +121,18 @@
     window.map.showOffersPins(filterAll());
   });
 
+  var resetFilters = function () {
+    mapFilter.reset();
+  };
+
   /**
   * @description Событие изменения значения фильтра типа жилья
   */
   mapFilter.addEventListener('change', onHousingFilter);
 
   window.filters = {
-    filterAll: filterAll
+    filterAll: filterAll,
+    resetFilters: resetFilters
   };
 
 })();
